@@ -72,11 +72,6 @@ checkpoint = ModelCheckpoint(checkpoint_path, monitor='val_categorical_accuracy'
 
 # 训练模型
 epochs = 10  # 选择合适的epoch数
-# history = model.fit(
-#     train_generator,
-#     epochs=epochs,
-#     validation_data=validation_generator
-# )
 history = model.fit(
     train_generator,
     epochs=epochs,

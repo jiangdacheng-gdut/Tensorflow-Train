@@ -6,12 +6,14 @@ from module import *
 '''
 
 # 加载配置文件
-config_path = '/Users/jiangdacheng/Desktop/8-Coding/tensorflow-proxylessnas/net.config'
+config_path = '/root/dacheng/Tensorflow-Train/net.config'
 with open(config_path, 'r') as f:
     config = json.load(f)
 
 # 创建输入
 dummy_input = tf.random.normal([1, 224, 224, 3])
+
+print(dummy_input)
 
 # 创建模型
 model = MyModel(config)
@@ -20,4 +22,4 @@ model = MyModel(config)
 _ = model(dummy_input)  
 
 # 打印模型结构
-model.summary()  
+# model.summary()  
