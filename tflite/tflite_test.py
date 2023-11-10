@@ -7,14 +7,8 @@ from PIL import Image
 sys.path.append("..")  # 添加上一级目录到sys.path
 from load_model import get_image
 
-# 加载TFLite模型
-# interpreter = tf.lite.Interpreter(model_path="/root/dacheng/Tensorflow-Train/output/model.tflite")
-# interpreter.allocate_tensors()
-
-# image_data = get_image('/root/dacheng/Tensorflow-Train/dataset/cv_ids_25/test/Attack/test-0072_18072.png')
-
 # 模型路径
-model_path = '/root/dacheng/Tensorflow-Train/output/model.tflite'
+model_path = '/root/dacheng/Tensorflow-Train/tflite/quantized_model.tflite'
 
 # 输入张量和输出张量的索引
 input_index = 0  # 输入张量的索引
@@ -28,15 +22,12 @@ interpreter.allocate_tensors()
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
-interpreter.resize_tensor_input(input_details[0]['index'], (1, 224, 224, 3))
+interpreter.resize_tensor_input(input_details[0]['index'], (1, 32, 32, 3))
 interpreter.allocate_tensors()  # 重新分配
 
 # 定义图像尺寸和通道数
 input_shape = input_details[0]['shape']
-# image_width, image_height, channels = input_shape[1], input_shape[2], input_shape[3]
-image_width, image_height, channels = 224, 224, 3
-# print(image_width,image_height)
-# time.sleep(100)
+image_width, image_height, channels = 32, 32, 3
 
 # 定义图像预处理函数
 def preprocess_image_int8(image_path):
@@ -123,7 +114,7 @@ for image_path, label in zip(image_paths, labels):
     # 当模型为float32
     input_data = preprocess_image_float32(image_path)
 
-    print(input_data.shape)
+    # print(input_data.shape)
 
     # 设置输入数据到模型的输入张量
     interpreter.set_tensor(input_details[input_index]['index'], input_data)

@@ -3,3 +3,6 @@ dataset/
 
 # 忽略输出模型
 output/
+
+# 忽略网络加载文件
+*.config

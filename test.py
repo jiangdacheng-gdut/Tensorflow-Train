@@ -11,7 +11,7 @@ with open(config_path, 'r') as f:
     config = json.load(f)
 
 # 创建输入
-dummy_input = tf.random.normal([1, 224, 224, 3])
+dummy_input = tf.random.normal([1, 32, 32, 3])
 
 print(dummy_input)
 

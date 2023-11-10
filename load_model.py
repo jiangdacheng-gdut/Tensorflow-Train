@@ -16,8 +16,6 @@ def get_loss_fn(label_smoothing=0.1):
         return loss
     return cross_entropy_with_label_smoothing
 
-# 加载模型
-# loss_fn = get_loss_fn(label_smoothing=0.1)
 def loss_fn():
     return get_loss_fn(label_smoothing=0.1)
 

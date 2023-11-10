@@ -34,8 +34,8 @@ model = MyModel(config)
 
 # 数据预处理
 batch_size = 16
-img_height = 224  # 根据你的模型和数据集调整
-img_width = 224   # 根据你的模型和数据集调整
+img_height = 32  # 根据你的模型和数据集调整
+img_width = 32   # 根据你的模型和数据集调整
 
 train_datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)  # 假设我们使用20%的数据作为验证集
 
@@ -66,12 +66,12 @@ model.build(input_shape=(None, img_height, img_width, 3))
 model.summary()
 
 # 创建ModelCheckpoint回调
-checkpoint_path = '/root/dacheng/Tensorflow-Train/output/best_model'
+checkpoint_path = '/root/dacheng/Tensorflow-Train/output/best_model1030'
 checkpoint = ModelCheckpoint(checkpoint_path, monitor='val_categorical_accuracy', verbose=1, 
                              save_best_only=True, mode='max', save_format='tf')
 
 # 训练模型
-epochs = 10  # 选择合适的epoch数
+epochs = 20  # 选择合适的epoch数
 history = model.fit(
     train_generator,
     epochs=epochs,
