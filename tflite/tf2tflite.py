@@ -43,12 +43,6 @@ converter = tf.lite.TFLiteConverter.from_concrete_functions([concrete_func])
 converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS, 
                                        tf.lite.OpsSet.SELECT_TF_OPS]
 
-# 启用后训练量化
-# converter.optimizations = [tf.lite.Optimize.DEFAULT]
-
-# 设置代表性数据集以校准量化
-# converter.representative_dataset = representative_dataset_gen
-
 # 进行转换
 tflite_quantized_model = converter.convert()
 

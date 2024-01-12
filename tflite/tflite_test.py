@@ -4,11 +4,12 @@ import sys
 import os
 import time
 from PIL import Image
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
 sys.path.append("..")  # 添加上一级目录到sys.path
-from load_model import get_image
+# from load_model import get_image
 
 # 模型路径
-model_path = '/root/dacheng/Tensorflow-Train/tflite/quantized_model.tflite'
+model_path = '/root/Tensorflow-Train/Test/DSConv_model.tflite'
 
 # 输入张量和输出张量的索引
 input_index = 0  # 输入张量的索引
@@ -33,8 +34,6 @@ image_width, image_height, channels = 32, 32, 3
 def preprocess_image_int8(image_path):
     image = Image.open(image_path).convert('RGB')
     image = image.resize((image_width, image_height))
-    # 图片本身就是int8型，因此不需要再进行放缩
-    # image = np.array(image) / 255.0  # 将像素值缩放到0-1范围
     image = np.expand_dims(image, axis=0)  # 增加batch维度
     return image
 
@@ -42,19 +41,12 @@ def preprocess_image_float32(image_path):
     image = Image.open(image_path)
     image = image.resize((image_width, image_height))
     image = np.array(image, dtype=np.float32) / 255.0  # 将像素值缩放到0-1范围，并转换为float32类型
-    print(np.mean(image))
     image = np.expand_dims(image, axis=0)  # 增加batch维度
-    print(image.shape)
     return image
 
 # 获取置信度最高的类别索引
 def process_output(output_data):
-    # 在这里编写你的输出结果处理逻辑
     class_id = np.argmax(output_data)  
-    # print(class_id)
-    # confidence = output_data[class_id]  # 获取置信度最高的类别的置信度值
-
-    # 返回处理后的结果
     return class_id
 
 # 类别标签映射
@@ -79,8 +71,20 @@ def get_class(file):
     print(split_path[6])
     return(split_path[6])
 
+def get_image(image_path):
+    # 加载图片
+    image = load_img(image_path, target_size=(224, 224))  # 例如，调整为224x224
+
+    # 将图片转换为数组
+    image_array = img_to_array(image)
+
+    # 扩展维度以匹配模型的输入尺寸
+    image_array = tf.expand_dims(image_array, axis=0)
+
+    return(image_array) 
+
 # 读取数据集文件夹中的图像文件
-dataset_folder = '/root/dacheng/Tensorflow-Train/dataset/cv_ids_25/test'
+dataset_folder = '/root/dacheng/proxylessnas/cv_ids_25/test'
 image_paths = []
 labels = []
 label_index = 0
@@ -91,12 +95,8 @@ class_mapping = class_mapping()
 for root, dirs, files in os.walk(dataset_folder):
     for file in files:
         if file.endswith('.jpg') or file.endswith('.png'):
-
             image_paths.append(os.path.join(root, file))
-            # 添加标签，用于检验，同一个文件夹的类别相同
             labels.append(label_index-1)
-            # print(labels)
-            # time.sleep(0.1)
     label_index += 1
 
 # 创建一个数组来保存推理结果
@@ -108,13 +108,8 @@ total_inference_time = 0
 # 遍历图像文件并进行推理
 for image_path, label in zip(image_paths, labels):
     # 预处理图像
-
-    # 当模型为int8
-    # input_data = preprocess_image_int8(image_path) 
     # 当模型为float32
     input_data = preprocess_image_float32(image_path)
-
-    # print(input_data.shape)
 
     # 设置输入数据到模型的输入张量
     interpreter.set_tensor(input_details[input_index]['index'], input_data)

@@ -1,6 +1,6 @@
 import tensorflow as tf
 import json
-from module import *
+from mymodule import *
 
 ''' 该文件用于打印模型结构
 '''

@@ -4,7 +4,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.metrics import CategoricalAccuracy
 from tensorflow.keras.callbacks import ModelCheckpoint
-from module import *
+from mymodule import *
 
 # 数据集位置
 dataset_path = '/root/dacheng/Tensorflow-Train/dataset/cv_ids_25'
@@ -37,7 +37,7 @@ batch_size = 16
 img_height = 32  # 根据你的模型和数据集调整
 img_width = 32   # 根据你的模型和数据集调整
 
-train_datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)  # 假设我们使用20%的数据作为验证集
+train_datagen = ImageDataGenerator(rescale=1./255)  # 验证集的生成器
 
 train_generator = train_datagen.flow_from_directory(
     dataset_path + '/train',   # 替换为数据集的路径
@@ -47,7 +47,9 @@ train_generator = train_datagen.flow_from_directory(
     subset='training'
 )
 
-validation_generator = train_datagen.flow_from_directory(
+test_datagen = ImageDataGenerator(rescale=1./255)  # 测试集的生成器
+
+validation_generator = test_datagen.flow_from_directory(
     dataset_path + '/test',
     target_size=(img_height, img_width),
     batch_size=batch_size,
